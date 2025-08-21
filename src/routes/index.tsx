@@ -1,5 +1,6 @@
 import App from "@/App";
 import About from "@/pages/About";
+import { ContactPage } from "@/pages/ContactPage";
 import FeaturesPage from "@/pages/FeaturesPage";
 import HomePage from "@/pages/HomePage";
 import Login from "@/pages/Login";
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         Component: PricingPage,
         path: "pricing",
+      },
+      {
+        Component: ContactPage,
+        path: "contact",
       },
     ],
   },
