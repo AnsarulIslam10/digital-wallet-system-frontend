@@ -25,6 +25,7 @@ const navigationLinks = [
   { href: "/", label: "Home", active: true },
   { href: "/about", label: "About" },
   { href: "/features", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
 ];
 
 export default function Navbar() {

@@ -3,6 +3,8 @@ import About from "@/pages/About";
 import FeaturesPage from "@/pages/FeaturesPage";
 import HomePage from "@/pages/HomePage";
 import Login from "@/pages/Login";
+import { PricingPage } from "@/pages/PricingPage";
+
 import Register from "@/pages/Register";
 import { createBrowserRouter } from "react-router";
 
@@ -22,6 +24,10 @@ export const router = createBrowserRouter([
       {
         Component: FeaturesPage,
         path: "features",
+      },
+      {
+        Component: PricingPage,
+        path: "pricing",
       },
     ],
   },
