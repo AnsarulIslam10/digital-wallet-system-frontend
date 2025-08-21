@@ -12,14 +12,13 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 export function LoginForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const navigate = useNavigate();
   const form = useForm();
   const [login] = useLoginMutation();
 
@@ -31,13 +30,7 @@ export function LoginForm({
       // navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
-
-      if (err.status === 401) {
-        toast.error("Your account is not verified");
-        navigate("/verify", { state: data.phone });
-      } else {
-        toast.error("Login failed. Please check your credentials.");
-      }
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 
