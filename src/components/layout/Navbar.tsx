@@ -27,6 +27,7 @@ const navigationLinks = [
   { href: "/features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
   { href: "/contact", label: "Contact" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export default function Navbar() {
