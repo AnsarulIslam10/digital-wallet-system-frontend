@@ -70,8 +70,9 @@ export default function Navbar() {
                         href={link.href}
                         className="py-1.5"
                         active={link.active}
+                        asChild
                       >
-                        {link.label}
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -93,8 +94,9 @@ export default function Navbar() {
                       active={link.active}
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                      asChild
                     >
-                      {link.label}
+                      <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
