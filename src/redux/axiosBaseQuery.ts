@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/lib/axios";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { AxiosError, type AxiosRequestConfig } from "axios";
@@ -14,15 +15,21 @@ const axiosBaseQuery =
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params, headers }) => {
+  async ({ url, method, data, params, headers }, { getState }) => {
     try {
+      const token = (getState() as any).auth?.accessToken;
+
       const result = await axiosInstance({
-        url: url,
+        url,
         method,
         data,
         params,
-        headers,
+        headers: {
+          ...(headers || {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
+
       return { data: result.data };
     } catch (axiosError) {
       const err = axiosError as AxiosError;

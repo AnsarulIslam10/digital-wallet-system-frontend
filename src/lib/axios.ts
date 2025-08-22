@@ -1,35 +1,37 @@
-import config from "@/config";
 import axios from "axios";
+import config from "@/config";
 
 export const axiosInstance = axios.create({
   baseURL: config.baseUrl,
-  withCredentials: true,
 });
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    console.log("Axios", config);
-    return config;
-  },
-  function (error) {
-    // Do something with request error
-    return Promise.reject(error);
+/**
+ * Attach Authorization header from localStorage
+ */
+axiosInstance.interceptors.request.use((cfg) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    cfg.headers = cfg.headers ?? {};
+    (cfg.headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
-);
+  return cfg;
+});
 
-// Add a response interceptor
+/**
+ * On 401, nuke tokens and kick to /login
+ */
 axiosInstance.interceptors.response.use(
-  function onFulfilled(response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    console.log("Axios", response);
-    return response;
-  },
-  function onRejected(error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+  (res) => res,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userRole");
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
     return Promise.reject(error);
   }
 );

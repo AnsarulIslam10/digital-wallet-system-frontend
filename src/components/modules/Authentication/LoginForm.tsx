@@ -10,27 +10,68 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { useLoginMutation, authApi } from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
+
+const loginSchema = z.object({
+  phone: z.string().min(11, { message: "Phone number is too short" }),
+  password: z.string().min(6, { message: "Password is too short" }),
+});
+
+type LoginInputs = z.infer<typeof loginSchema>;
+
+function getRedirectPathByRole(role?: string) {
+  switch (role) {
+    case "agent":
+      return "/features";
+    case "admin":
+      return "/pricing";
+    default:
+      return "/";
+  }
+}
 
 export function LoginForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const form = useForm();
-  const [login] = useLoginMutation();
+  const form = useForm<LoginInputs>({ resolver: zodResolver(loginSchema) });
+  const [login, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit = async (data: LoginInputs) => {
     try {
+      // API shape returns { data: {...} } from axiosBaseQuery
       const res = await login(data).unwrap();
-      console.log(res);
-      // You can navigate to dashboard or home after successful login
-      // navigate("/dashboard");
+
+      // Expecting: { accessToken, refreshToken, user }
+      const payload = (res as any)?.data ?? res;
+      const accessToken = payload?.accessToken;
+      const refreshToken = payload?.refreshToken;
+      const role = payload?.user?.role;
+
+      if (!accessToken) throw new Error("Missing access token");
+
+      localStorage.setItem("accessToken", accessToken);
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+      if (role) localStorage.setItem("userRole", role);
+
+      // ensure components like Navbar refetch /user/me
+      dispatch(authApi.util.invalidateTags(["USER"]));
+
+      toast.success("Logged in successfully");
+      navigate(getRedirectPathByRole(role), { replace: true });
     } catch (err: any) {
       console.error(err);
-      toast.error("Login failed. Please check your credentials.");
+      toast.error(
+        err?.data?.message || "Login failed. Please check your credentials."
+      );
     }
   };
 
@@ -46,7 +87,6 @@ export function LoginForm({
       <div className="grid gap-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Phone number field */}
             <FormField
               control={form.control}
               name="phone"
@@ -54,18 +94,13 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="01XXXXXXXXX"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <Input placeholder="01XXXXXXXXX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Password field */}
             <FormField
               control={form.control}
               name="password"
@@ -73,20 +108,15 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="******"
-                      {...field}
-                      value={field.value || ""}
-                    />
+                    <Input type="password" placeholder="******" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Login
+            <Button disabled={isLoading} type="submit" className="w-full">
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </form>
         </Form>

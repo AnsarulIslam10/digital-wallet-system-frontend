@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router"; // <-- useLocation
+import { useLocation, Link, useNavigate } from "react-router"; // <-- useNavigate added
 import Logo from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ModeToggle } from "./ModeToggler";
-import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 
 // Navigation links array
@@ -23,14 +27,24 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
-  const location = useLocation(); // current route
+  const location = useLocation();
+  const navigate = useNavigate();
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
-
+console.log(data)
   const handleLogout = async () => {
-    await logout(undefined);
-    dispatch(authApi.util.resetApiState());
+    try {
+      await logout(undefined).unwrap();
+    } catch {
+      // ignore network/server errors for local cleanup
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userRole");
+      dispatch(authApi.util.resetApiState());
+      navigate("/login", { replace: true });
+    }
   };
 
   return (
@@ -41,69 +55,85 @@ export default function Navbar() {
           <Popover>
             <PopoverTrigger asChild>
               <Button className="group size-8 md:hidden" variant="ghost" size="icon">
-                {/* Hamburger Icon */}
-                <svg className="pointer-events-none" width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12L20 12" className="origin-center -translate-y-[7px] transition-all duration-300 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]" />
-                  <path d="M4 12H20" className="origin-center transition-all duration-300 group-aria-expanded:rotate-45" />
-                  <path d="M4 12H20" className="origin-center translate-y-[7px] transition-all duration-300 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]" />
+                <svg
+                  className="pointer-events-none"
+                  width={16}
+                  height={16}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 12L20 12" />
+                  <path d="M4 6L20 6" />
+                  <path d="M4 18L20 18" />
                 </svg>
+                <span className="sr-only">Toggle Menu</span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
-              <NavigationMenu className="max-w-none *:w-full">
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink
-                        href={link.href}
-                        className={`py-1.5 ${location.pathname === link.href ? "text-primary font-semibold" : ""}`}
-                        asChild
-                      >
-                        <Link to={link.href}>{link.label}</Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
+            <PopoverContent className="w-56 p-4">
+              <nav className="grid gap-2">
+                {navigationLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                      location.pathname === link.href
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
             </PopoverContent>
           </Popover>
 
-          {/* Desktop nav */}
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-primary hover:text-primary/90">
-              <Logo />
-            </Link>
-            <NavigationMenu className="max-md:hidden">
-              <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      href={link.href}
-                      className={`text-muted-foreground hover:text-primary py-1.5 font-medium ${
-                        location.pathname === link.href ? "text-primary font-semibold" : ""
-                      }`}
-                      asChild
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 font-medium">
+            <Logo />
+          </Link>
         </div>
 
-        {/* Right side */}
+        {/* Desktop navigation */}
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            {navigationLinks.map((link) => (
+              <NavigationMenuItem key={link.href}>
+                <NavigationMenuLink
+                  href={link.href}
+                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                    location.pathname === link.href
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* Right actions */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-          {data?.data?.email ? (
-            <Button onClick={handleLogout} variant="outline" className="text-sm">
+          {data?.data ? (
+            <Button onClick={handleLogout} variant="outline">
               Logout
             </Button>
           ) : (
-            <Button asChild className="text-sm">
-              <Link to="/login">Login</Link>
-            </Button>
+            <>
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/register">
+                <Button>Sign up</Button>
+              </Link>
+            </>
           )}
         </div>
       </div>
