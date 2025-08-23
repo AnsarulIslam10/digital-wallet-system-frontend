@@ -64,6 +64,16 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             providesTags: ["Transaction"],
         }),
+
+        getAgentTransactions: build.query({
+            query: (params) => ({
+                url: "/transaction/agent-transactions",
+                method: "GET",
+                params,
+            }),
+            providesTags: ["Transaction"],
+        }),
+
     }),
 });
 
@@ -74,4 +84,5 @@ export const {
     useWithdrawMutation,
     useSendMoneyMutation,
     useGetMyTransactionsQuery,
+    useGetAgentTransactionsQuery
 } = transactionApi;
