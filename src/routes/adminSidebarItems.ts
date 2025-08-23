@@ -1,3 +1,4 @@
+import Profile from "@/components/Profile";
 import Overview from "@/pages/Admin/Overview";
 import Transactions from "@/pages/Admin/Transactions";
 import Users from "@/pages/Admin/Users";
@@ -11,6 +12,11 @@ export const adminSidebarItems: ISidebarItem[] = [
                 title: "Overview",
                 url: "/admin/overview",
                 component: Overview
+            },
+            {
+                title: "Profile",
+                url: "/admin/profile",
+                component: Profile
             },
         ],
     },

@@ -1,6 +1,6 @@
 import AddMoney from "@/pages/User/AddMoney";
 import Overview from "@/pages/User/Overview";
-import Profile from "@/pages/User/Profile";
+import Profile from "@/components/Profile";
 import SendMoney from "@/pages/User/SendMoney";
 import Transactions from "@/pages/User/Transactions";
 import Withdraw from "@/pages/User/Withdraw";
