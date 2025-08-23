@@ -1,6 +1,6 @@
-import * as React from "react"
+import * as React from "react";
 
-import Logo from "@/assets/icons/Logo"
+import Logo from "@/assets/icons/Logo";
 import {
   Sidebar,
   SidebarContent,
@@ -12,20 +12,25 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { Link } from "react-router"
-import { adminSidebarItems } from "@/routes/adminSidebarItems"
-
-// This is sample data.
-const data = {
-  navMain: adminSidebarItems,
-}
+} from "@/components/ui/sidebar";
+import { Link } from "react-router";
+import { adminSidebarItems } from "@/routes/adminSidebarItems";
+import { getSidebarItems } from "@/utils/getSidebarItems";
+import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {data: userData} = useUserInfoQuery(undefined)
+  // This is sample data.
+  const data = {
+    navMain: getSidebarItems(userData?.data.role),
+  };
+  
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Link to={"/"}><Logo /></Link>
+        <Link to={"/"}>
+          <Logo />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
@@ -48,5 +53,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
