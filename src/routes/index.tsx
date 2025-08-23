@@ -10,10 +10,14 @@ import { PricingPage } from "@/pages/PricingPage";
 
 import Register from "@/pages/Register";
 import { generateRoutes } from "@/utils/generateRoutes";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { agentSidebarItems } from "./agentSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
+import { withAuth } from "@/utils/withAuth";
+import Unauthorized from "@/pages/Unauthorized";
+import { role } from "@/constants/role";
+import type { TRole } from "@/types";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +29,7 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-        Component: About,
+        Component: withAuth(About),
         path: "about",
       },
       {
@@ -47,19 +51,28 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.admin as TRole),
     path: "/admin",
-    children: [...generateRoutes(adminSidebarItems)],
+    children: [
+      { index: true, element: <Navigate to="/admin/overview" /> },
+      ...generateRoutes(adminSidebarItems),
+    ],
   },
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.user as TRole),
     path: "/user",
-    children: [...generateRoutes(userSidebarItems)],
+    children: [
+      { index: true, element: <Navigate to="/user/send-money" /> },
+      ...generateRoutes(userSidebarItems),
+    ],
   },
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.agent as TRole),
     path: "/agent",
-    children: [...generateRoutes(agentSidebarItems)],
+    children: [
+      { index: true, element: <Navigate to="/agent/cash-in" /> },
+      ...generateRoutes(agentSidebarItems),
+    ],
   },
   {
     Component: Login,
@@ -68,5 +81,9 @@ export const router = createBrowserRouter([
   {
     Component: Register,
     path: "/register",
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
   },
 ]);
