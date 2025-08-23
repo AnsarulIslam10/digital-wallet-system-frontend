@@ -1,4 +1,3 @@
-import { useLocation, Link, useNavigate } from "react-router"; // <-- useNavigate added
 import Logo from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,14 +6,20 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ModeToggle } from "./ModeToggler";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   authApi,
   useLogoutMutation,
   useUserInfoQuery,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
+import { UserCircle } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router"; // <-- useNavigate added
+import { ModeToggle } from "./ModeToggler";
 
 // Navigation links array
 const navigationLinks = [
@@ -32,7 +37,7 @@ export default function Navbar() {
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
-console.log(data)
+  console.log(data);
   const handleLogout = async () => {
     try {
       await logout(undefined).unwrap();
@@ -54,7 +59,11 @@ console.log(data)
           {/* Mobile menu */}
           <Popover>
             <PopoverTrigger asChild>
-              <Button className="group size-8 md:hidden" variant="ghost" size="icon">
+              <Button
+                className="group size-8 md:hidden"
+                variant="ghost"
+                size="icon"
+              >
                 <svg
                   className="pointer-events-none"
                   width={16}
@@ -122,9 +131,16 @@ console.log(data)
         <div className="flex items-center gap-2">
           <ModeToggle />
           {data?.data ? (
-            <Button onClick={handleLogout} variant="outline">
-              Logout
-            </Button>
+            <div className="flex items-center gap-3">
+              <div className="cursor-pointer" title={data.data.name}>
+                <Link to={`/${data.data.role}`}>
+                  <UserCircle />
+                </Link>
+              </div>
+              <Button onClick={handleLogout} variant="outline">
+                Logout
+              </Button>
+            </div>
           ) : (
             <>
               <Link to="/login">
