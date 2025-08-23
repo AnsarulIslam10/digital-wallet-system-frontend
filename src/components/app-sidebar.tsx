@@ -16,9 +16,10 @@ import {
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { getSidebarItems } from "@/utils/getSidebarItems";
 import { Link } from "react-router";
+import { ModeToggle } from "./layout/ModeToggler";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {data: userData} = useUserInfoQuery(undefined)
+  const { data: userData } = useUserInfoQuery(undefined);
   // This is sample data.
   const data = {
     navMain: getSidebarItems(userData?.data.role),
@@ -26,9 +27,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Link to={"/"}>
-          <Logo />
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to={"/"}>
+            <Logo />
+          </Link>
+          <ModeToggle />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
