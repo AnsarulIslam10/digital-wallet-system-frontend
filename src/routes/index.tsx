@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         index: true,
       },
       {
-        Component: withAuth(About),
+        Component: About,
         path: "about",
       },
       {

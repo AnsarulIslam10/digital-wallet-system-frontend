@@ -18,10 +18,9 @@ import {
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
 import { UserCircle } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router"; // <-- useNavigate added
+import { Link, useLocation, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggler";
 
-// Navigation links array
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -37,12 +36,12 @@ export default function Navbar() {
   const { data } = useUserInfoQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
-  console.log(data);
+
   const handleLogout = async () => {
     try {
       await logout(undefined).unwrap();
     } catch {
-      // ignore network/server errors for local cleanup
+      // ignore network/server errors
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
@@ -112,15 +111,17 @@ export default function Navbar() {
           <NavigationMenuList>
             {navigationLinks.map((link) => (
               <NavigationMenuItem key={link.href}>
-                <NavigationMenuLink
-                  href={link.href}
-                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                    location.pathname === link.href
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-muted"
-                  }`}
-                >
-                  {link.label}
+                <NavigationMenuLink asChild>
+                  <Link
+                    to={link.href}
+                    className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                      location.pathname === link.href
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
