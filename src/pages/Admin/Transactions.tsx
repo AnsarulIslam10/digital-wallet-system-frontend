@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,24 +34,30 @@ export default function Transactions() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
   const [filterType, setFilterType] = useState("all");
+  const [minAmount, setMinAmount] = useState<number | "">("");
+  const [maxAmount, setMaxAmount] = useState<number | "">("");
+  const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const queryArgs = {
     page: currentPage,
     limit,
     type: filterType !== "all" ? filterType : undefined,
+    minAmount: minAmount !== "" ? Number(minAmount) : undefined,
+    maxAmount: maxAmount !== "" ? Number(maxAmount) : undefined,
+    search: search || undefined,
     sort: sortOrder,
   };
 
-  const { data, isLoading, isError, error } = useGetAllTransactionsQuery(queryArgs, {
-    refetchOnMountOrArgChange: true,
-  });
-  console.log(data)
+  const { data, isLoading, isError, error } = useGetAllTransactionsQuery(
+    queryArgs,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const transactions: any[] = data?.data?.data || [];
-
   const meta = data?.data?.meta || { totalPages: 1, total: 0 };
-
   const totalPages = meta?.totalPages;
 
   const getTransactionBadge = (type: string) => {
@@ -78,7 +84,11 @@ export default function Transactions() {
   const formatAmount = (amount: number, type: string) => {
     const isNegative = ["withdraw", "send", "fee", "cash-out"].includes(type);
     return (
-      <span className={`font-semibold ${isNegative ? "text-red-600" : "text-green-600"}`}>
+      <span
+        className={`font-semibold ${
+          isNegative ? "text-red-600" : "text-green-600"
+        }`}
+      >
         {isNegative ? "-" : "+"} {amount} BDT
       </span>
     );
@@ -107,13 +117,13 @@ export default function Transactions() {
   };
 
   const handleSortChange = () => {
-    setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     setCurrentPage(1);
   };
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterType]);
+  }, [filterType, minAmount, maxAmount, search]);
 
   if (isError) {
     toast.error("Failed to fetch transactions");
@@ -124,37 +134,74 @@ export default function Transactions() {
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">All Transactions</h2>
-          <p className="text-muted-foreground">View and filter all transactions</p>
+          <h2 className="text-3xl font-bold tracking-tight">
+            All Transactions
+          </h2>
+          <p className="text-muted-foreground">
+            View, search, and filter all transactions
+          </p>
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-            <CardTitle>Transactions</CardTitle>
-
-            <div className="flex gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Filter className="h-4 w-4" />
-                    {filterType === "all" ? "All Types" : filterType.replace("-", " ")}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {["all","add","withdraw","send","receive","fee","cash-in","cash-out"].map(type => (
-                    <DropdownMenuItem key={type} onClick={() => setFilterType(type)}>
-                      {type === "all" ? "All Types" : type.replace("-", " ")}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <Button size="sm" variant="outline" className="gap-1" onClick={handleSortChange}>
-                {sortOrder === "asc" ? "Oldest First" : "Newest First"}
+        {/* Filters & Search */}
+        <div className="flex flex-wrap gap-2 mb-4 items-center">
+          <input
+            type="text"
+            placeholder="Search description, from/to phone..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded px-2 py-1 flex-1 min-w-[200px]"
+          />
+          <input
+            type="number"
+            placeholder="Min Amount"
+            value={minAmount}
+            onChange={(e) => setMinAmount(Number(e.target.value) || "")}
+            className="border rounded px-2 py-1 w-24"
+          />
+          <input
+            type="number"
+            placeholder="Max Amount"
+            value={maxAmount}
+            onChange={(e) => setMaxAmount(Number(e.target.value) || "")}
+            className="border rounded px-2 py-1 w-24"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Filter className="h-4 w-4" />
+                {filterType === "all"
+                  ? "All Types"
+                  : filterType.replace("-", " ")}
               </Button>
-            </div>
-          </CardHeader>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {[
+                "all",
+                "add",
+                "withdraw",
+                "send",
+                "receive",
+                "fee",
+                "cash-in",
+                "cash-out",
+              ].map((type) => (
+                <DropdownMenuItem
+                  key={type}
+                  onClick={() => setFilterType(type)}
+                >
+                  {type === "all" ? "All Types" : type.replace("-", " ")}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
+          <Button size="sm" variant="outline" onClick={handleSortChange}>
+            {sortOrder === "asc" ? "Oldest First" : "Newest First"}
+          </Button>
+        </div>
+
+        {/* Transactions Table */}
+        <Card>
           <CardContent>
             {isLoading ? (
               <div className="space-y-4">
@@ -173,10 +220,9 @@ export default function Transactions() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        Date & Time
-                      </TableHead>
+                      <TableHead>Date & Time</TableHead>
+                      <TableHead>From Phone</TableHead>
+                      <TableHead>To Phone</TableHead>
                       <TableHead>Type</TableHead>
                       <TableHead className="text-right">Amount</TableHead>
                       <TableHead>Description</TableHead>
@@ -184,7 +230,7 @@ export default function Transactions() {
                   </TableHeader>
                   <TableBody>
                     {transactions.length > 0 ? (
-                      transactions.map(tx => (
+                      transactions.map((tx) => (
                         <TableRow key={tx._id}>
                           <TableCell className="font-medium">
                             {new Date(tx.createdAt).toLocaleDateString()} <br />
@@ -192,18 +238,28 @@ export default function Transactions() {
                               {new Date(tx.createdAt).toLocaleTimeString()}
                             </span>
                           </TableCell>
+                          <TableCell>{tx.from?.phone}</TableCell>
+                          <TableCell>{tx.to?.phone}</TableCell>
                           <TableCell>{getTransactionBadge(tx.type)}</TableCell>
-                          <TableCell className="text-right">{formatAmount(tx.amount, tx.type)}</TableCell>
-                          <TableCell className="text-muted-foreground">{getTransactionDescription(tx)}</TableCell>
+                          <TableCell className="text-right">
+                            {formatAmount(tx.amount, tx.type)}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {getTransactionDescription(tx)}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8">
+                        <TableCell colSpan={6} className="text-center py-8">
                           <div className="flex flex-col items-center gap-2">
                             <Calendar className="h-12 w-12 text-muted-foreground" />
-                            <p className="text-lg font-medium">No transactions found</p>
-                            <p className="text-muted-foreground">No transaction data available</p>
+                            <p className="text-lg font-medium">
+                              No transactions found
+                            </p>
+                            <p className="text-muted-foreground">
+                              No transaction data available
+                            </p>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -211,27 +267,50 @@ export default function Transactions() {
                   </TableBody>
                 </Table>
 
+                {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="flex justify-end mt-4">
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
                           <PaginationPrevious
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                            onClick={() =>
+                              setCurrentPage((prev) => Math.max(prev - 1, 1))
+                            }
+                            className={
+                              currentPage === 1
+                                ? "pointer-events-none opacity-50"
+                                : ""
+                            }
                           />
                         </PaginationItem>
 
-                        {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
-                          <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
-                            <PaginationLink isActive={currentPage === page}>{page}</PaginationLink>
+                        {Array.from(
+                          { length: totalPages },
+                          (_, i) => i + 1
+                        ).map((page) => (
+                          <PaginationItem
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                          >
+                            <PaginationLink isActive={currentPage === page}>
+                              {page}
+                            </PaginationLink>
                           </PaginationItem>
                         ))}
 
                         <PaginationItem>
                           <PaginationNext
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                            onClick={() =>
+                              setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                              )
+                            }
+                            className={
+                              currentPage === totalPages
+                                ? "pointer-events-none opacity-50"
+                                : ""
+                            }
                           />
                         </PaginationItem>
                       </PaginationContent>
