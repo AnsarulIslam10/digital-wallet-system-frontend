@@ -1,39 +1,61 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useGetAllTransactionsQuery,
   useGetAllUsersQuery,
 } from "@/redux/features/admin/admin.api";
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  Tooltip, 
-  Legend, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   ResponsiveContainer,
   LineChart,
-  Line
+  Line,
 } from "recharts";
-import { Users, UserCheck, UserCog, DollarSign, TrendingUp, Activity } from "lucide-react";
+import {
+  Users,
+  UserCheck,
+  UserCog,
+  DollarSign,
+  TrendingUp,
+  Activity,
+} from "lucide-react";
 
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 const Overview = () => {
-  const { data: userData, isLoading: usersLoading } = useGetAllUsersQuery(undefined);
-  const { data: transactionData, isLoading: txLoading } = useGetAllTransactionsQuery(undefined);
+  const { data: userData, isLoading: usersLoading } =
+    useGetAllUsersQuery(undefined);
+  const { data: transactionData, isLoading: txLoading } =
+    useGetAllTransactionsQuery({
+      page: 1,
+      limit: 1000, // large enough to get all
+    });
 
   if (usersLoading || txLoading) {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-          <p className="text-muted-foreground">Welcome to your admin dashboard</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Dashboard Overview
+          </h1>
+          <p className="text-muted-foreground">
+            Welcome to your admin dashboard
+          </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -54,22 +76,28 @@ const Overview = () => {
   }
 
   const users = userData?.data || [];
-  const transactions = transactionData?.data || [];
+  const transactions = transactionData?.data?.data || [];
 
   // User statistics
   const totalUsers = users.length;
   const totalAgents = users.filter((u: any) => u.role === "agent").length;
   const totalAdmins = users.filter((u: any) => u.role === "admin").length;
   const totalRegularUsers = users.filter((u: any) => u.role === "user").length;
-  const approvedAgents = users.filter((u: any) => u.role === "agent" && u.isApproved).length;
+  const approvedAgents = users.filter(
+    (u: any) => u.role === "agent" && u.isApproved
+  ).length;
 
   // Transaction statistics
   const totalTransactions = transactions.length;
-  const transactionVolume = transactions.reduce((sum: number, tx: any) => sum + tx.amount, 0);
-  const averageTransaction = totalTransactions > 0 ? transactionVolume / totalTransactions : 0;
-
+  const transactionVolume = transactions.reduce(
+    (sum: number, tx: any) => sum + tx.amount,
+    0
+  );
+  const averageTransaction =
+    totalTransactions > 0 ? transactionVolume / totalTransactions : 0;
+  console.log(transactions);
   // Transaction type analysis
-  const transactionTypes = transactions.reduce((acc: any, tx: any) => {
+  const transactionTypes = transactions?.reduce((acc: any, tx: any) => {
     acc[tx.type] = (acc[tx.type] || 0) + 1;
     return acc;
   }, {});
@@ -82,25 +110,32 @@ const Overview = () => {
   ];
 
   // Transaction type data for pie chart
-  const txTypeData = Object.entries(transactionTypes).map(([name, value], index) => ({
-    name: name.charAt(0).toUpperCase() + name.slice(1),
-    value,
-    color: COLORS[index % COLORS.length]
-  }));
+  const txTypeData = Object.entries(transactionTypes).map(
+    ([name, value], index) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+      color: COLORS[index % COLORS.length],
+    })
+  );
 
   // Last 30 days transaction data for line chart
   const last30Days = Array.from({ length: 30 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (29 - i));
     return {
-      name: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      amount: 0
+      name: date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      amount: 0,
     };
   });
 
   transactions.forEach((tx: any) => {
     const txDate = new Date(tx.createdAt);
-    const dayIndex = Math.floor((Date.now() - txDate.getTime()) / (1000 * 60 * 60 * 24));
+    const dayIndex = Math.floor(
+      (Date.now() - txDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
     if (dayIndex >= 0 && dayIndex < 30) {
       last30Days[29 - dayIndex].amount += tx.amount;
     }
@@ -110,13 +145,19 @@ const Overview = () => {
   const recentTxData = transactions.slice(-7).map((tx: any, index: number) => ({
     name: `Tx ${transactions.length - 6 + index}`,
     amount: tx.amount,
-    type: tx.type
+    type: tx.type,
   }));
 
-  const StatCard = ({ title, value, icon: Icon, description, trend }: { 
-    title: string; 
-    value: string | number; 
-    icon: any; 
+  const StatCard = ({
+    title,
+    value,
+    icon: Icon,
+    description,
+    trend,
+  }: {
+    title: string;
+    value: string | number;
+    icon: any;
     description?: string;
     trend?: string;
   }) => (
@@ -141,7 +182,9 @@ const Overview = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Dashboard Overview
+        </h1>
         <p className="text-muted-foreground">Welcome to your admin dashboard</p>
       </div>
 
@@ -205,14 +248,16 @@ const Overview = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                  label={({ name, percent }) =>
+                    `${name} (${(percent * 100).toFixed(0)}%)`
+                  }
                   labelLine={false}
                 >
                   {roleData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value} users`, 'Count']} />
+                <Tooltip formatter={(value) => [`${value} users`, "Count"]} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -235,13 +280,17 @@ const Overview = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                  label={({ name, percent }) =>
+                    `${name} (${(percent * 100).toFixed(0)}%)`
+                  }
                 >
                   {txTypeData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [`${value} transactions`, 'Count']} />
+                <Tooltip
+                  formatter={(value) => [`${value} transactions`, "Count"]}
+                />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -260,20 +309,27 @@ const Overview = () => {
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={last30Days}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#374151"
+                  opacity={0.1}
+                />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
-                  formatter={(value) => [`৳${Number(value).toLocaleString()}`, 'Amount']}
-                  labelStyle={{ color: '#1F2937' }}
+                <Tooltip
+                  formatter={(value) => [
+                    `৳${Number(value).toLocaleString()}`,
+                    "Amount",
+                  ]}
+                  labelStyle={{ color: "#1F2937" }}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke="#6366F1" 
+                <Line
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#6366F1"
                   strokeWidth={2}
-                  dot={{ fill: '#6366F1', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: '#4F46E5' }}
+                  dot={{ fill: "#6366F1", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: "#4F46E5" }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -289,18 +345,21 @@ const Overview = () => {
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={recentTxData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.1} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#374151"
+                  opacity={0.1}
+                />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
-                  formatter={(value) => [`৳${Number(value).toLocaleString()}`, 'Amount']}
-                  labelStyle={{ color: '#1F2937' }}
+                <Tooltip
+                  formatter={(value) => [
+                    `৳${Number(value).toLocaleString()}`,
+                    "Amount",
+                  ]}
+                  labelStyle={{ color: "#1F2937" }}
                 />
-                <Bar 
-                  dataKey="amount" 
-                  radius={[4, 4, 0, 0]}
-                  fill="#10B981"
-                />
+                <Bar dataKey="amount" radius={[4, 4, 0, 0]} fill="#10B981" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
