@@ -2,9 +2,7 @@ import Profile from "@/components/Profile";
 import ManageAgents from "@/pages/Admin/ManageAgents";
 import ManageUsers from "@/pages/Admin/ManageUsers";
 import Overview from "@/pages/Admin/Overview";
-
 import Transactions from "@/pages/Admin/Transactions";
-import Users from "@/pages/Admin/Users";
 import type { ISidebarItem } from "@/types";
 
 export const adminSidebarItems: ISidebarItem[] = [
@@ -40,11 +38,6 @@ export const adminSidebarItems: ISidebarItem[] = [
                 title: "Transactions",
                 url: "/admin/transactions",
                 component: Transactions
-            },
-            {
-                title: "Users",
-                url: "/admin/users",
-                component: Users
             }
         ]
     }
