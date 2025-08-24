@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,8 +101,8 @@ export default function Profile() {
       toast.success("Profile updated successfully");
       refetch();
       form.reset({ ...form.getValues(), currentPassword: "", newPassword: "" });
-    } catch (e: any) {
-      toast.error(e?.data?.message || "Failed to update profile");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update profile");
     }
   };
 

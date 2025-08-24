@@ -11,6 +11,14 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+    getAllTransactions: build.query({
+            query: (params) => ({
+                url: "/transaction",
+                method: "GET",
+                params,
+            }),
+            providesTags: ["Transaction"],
+        }),
 
     // Approve agent
     approveAgent: build.mutation({
@@ -36,4 +44,5 @@ export const {
   useGetAllUsersQuery,
   useApproveAgentMutation,
   useSuspendAgentMutation,
+  useGetAllTransactionsQuery
 } = adminApi;
