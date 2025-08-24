@@ -1,8 +1,6 @@
-import { ExternalLink } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 export const HeroSection = () => {
   return (
@@ -26,83 +24,22 @@ export const HeroSection = () => {
             </div>
             <div>
               <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl">
-                Revolutionize Your Finances with{" "}
+                Move money fast. Securely. Anywhere in Bangladesh with{" "}
                 <span className="text-primary">SecurePay</span>
               </h1>
               <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
-                Experience seamless, secure transactions with our
-                next-generation digital wallet. Send, receive, and manage your
-                money with bank-level security and intuitive design.
+                Send, receive, cash-in/out, and track every taka with real-time insights.
               </p>
             </div>
             <div className="mt-6 flex justify-center gap-3">
-              <Button className="shadow-sm transition-shadow hover:shadow">
-                Get Started
-              </Button>
-              <Button variant="outline" className="group">
-                Learn more{" "}
-                <ExternalLink className="ml-2 h-4 transition-transform group-hover:translate-x-0.5" />
-              </Button>
-            </div>
-            <div className="mt-20 flex flex-col items-center gap-5">
-              <p className="font-medium text-muted-foreground lg:text-left">
-                 Trusted by millions worldwide
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <a
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0"
-                  )}
-                >
-                  <img
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcn-ui-icon.svg"
-                    alt="shadcn/ui logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                  />
-                </a>
-                <a
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0"
-                  )}
-                >
-                  <img
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/typescript-icon.svg"
-                    alt="TypeScript logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                  />
-                </a>
-
-                <a
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0"
-                  )}
-                >
-                  <img
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/react-icon.svg"
-                    alt="React logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                  />
-                </a>
-                <a
-                  href="#"
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "group flex aspect-square h-12 items-center justify-center p-0"
-                  )}
-                >
-                  <img
-                    src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/tailwind-icon.svg"
-                    alt="Tailwind CSS logo"
-                    className="h-6 saturate-0 transition-all group-hover:saturate-100"
-                  />
-                </a>
-              </div>
+              <Link to="/register">
+                <Button size="lg">Get started</Button>
+              </Link>
+              <Link to="/features">
+                <Button size="lg" variant="outline">
+                  See features
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
