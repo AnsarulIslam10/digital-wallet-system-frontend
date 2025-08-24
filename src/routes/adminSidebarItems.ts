@@ -1,4 +1,5 @@
 import Profile from "@/components/Profile";
+import ManageUsers from "@/pages/Admin/ManageUsers";
 import Overview from "@/pages/Admin/Overview";
 import Transactions from "@/pages/Admin/Transactions";
 import Users from "@/pages/Admin/Users";
@@ -23,6 +24,11 @@ export const adminSidebarItems: ISidebarItem[] = [
     {
         title: "Digital Wallet Management",
         items: [
+            {
+                title: "Manage Users",
+                url: "/admin/manage-users",
+                component: ManageUsers
+            },
             {
                 title: "Transactions",
                 url: "/admin/transactions",

@@ -11,14 +11,51 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
     getAllTransactions: build.query({
-            query: (params) => ({
-                url: "/transaction",
-                method: "GET",
-                params,
-            }),
-            providesTags: ["Transaction"],
-        }),
+      query: (params) => ({
+        url: "/transaction",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Transaction"],
+    }),
+
+    // Get all wallets
+    getAllWallets: build.query({
+      query: () => ({
+        url: "/wallet/all-wallets",
+        method: "GET",
+      }),
+      providesTags: ["USER"],
+    }),
+
+    // Block wallet
+    blockWallet: build.mutation({
+      query: (walletId: string) => ({
+        url: `/wallet/block/${walletId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
+    // Unblock wallet
+    unblockWallet: build.mutation({
+      query: (walletId: string) => ({
+        url: `/wallet/unblock/${walletId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
+    blockUser: build.mutation({
+      query: (userId: string) => ({ url: `/user/block/${userId}`, method: "PATCH" }),
+      invalidatesTags: ["USER"],
+    }),
+    unblockUser: build.mutation({
+      query: (userId: string) => ({ url: `/user/unblock/${userId}`, method: "PATCH" }),
+      invalidatesTags: ["USER"],
+    }),
 
     // Approve agent
     approveAgent: build.mutation({
@@ -44,5 +81,10 @@ export const {
   useGetAllUsersQuery,
   useApproveAgentMutation,
   useSuspendAgentMutation,
-  useGetAllTransactionsQuery
+  useGetAllTransactionsQuery,
+  useGetAllWalletsQuery,
+  useBlockWalletMutation,
+  useUnblockWalletMutation,
+  useBlockUserMutation,
+  useUnblockUserMutation,
 } = adminApi;
