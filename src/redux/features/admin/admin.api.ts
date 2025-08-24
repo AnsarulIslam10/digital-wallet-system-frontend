@@ -5,9 +5,10 @@ export const adminApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Get all users
     getAllUsers: build.query({
-      query: () => ({
+      query: (params) => ({
         url: "/user/all-users",
         method: "GET",
+        params,
       }),
       providesTags: ["USER"],
     }),
