@@ -61,7 +61,7 @@ export default function FeaturesPage() {
 
   return (
     <div>
-      <section className="py-20 bg-accent">
+      <section className="py-20 rounded-xl border-0 shadow-sm bg-gradient-to-br from-background to-muted/50">
         <div className="container text-center">
           <div className="mx-auto flex max-w-5xl flex-col gap-6">
             <h1 className="text-3xl font-extrabold lg:text-5xl">
@@ -76,7 +76,7 @@ export default function FeaturesPage() {
       </section>   
         <div className="container mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
           {team.features.map((feature) => (
-            <div key={feature.id} className="flex flex-col border py-8 px-6">
+            <div key={feature.id} className="flex flex-col py-8 px-6 rounded-xl border-0 shadow-sm bg-gradient-to-br from-background to-muted/50">
               <h3 className="mb-2 text-xl font-semibold">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </div>
