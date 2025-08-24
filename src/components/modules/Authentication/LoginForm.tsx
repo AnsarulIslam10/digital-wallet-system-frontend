@@ -28,9 +28,9 @@ type LoginInputs = z.infer<typeof loginSchema>;
 function getRedirectPathByRole(role?: string) {
   switch (role) {
     case "agent":
-      return "/features";
+      return "/";
     case "admin":
-      return "/pricing";
+      return "/";
     default:
       return "/";
   }
@@ -47,10 +47,8 @@ export function LoginForm({
 
   const onSubmit = async (data: LoginInputs) => {
     try {
-      // API shape returns { data: {...} } from axiosBaseQuery
       const res = await login(data).unwrap();
 
-      // Expecting: { accessToken, refreshToken, user }
       const payload = (res as any)?.data ?? res;
       const accessToken = payload?.accessToken;
       const refreshToken = payload?.refreshToken;
@@ -62,7 +60,6 @@ export function LoginForm({
       if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
       if (role) localStorage.setItem("userRole", role);
 
-      // ensure components like Navbar refetch /user/me
       dispatch(authApi.util.invalidateTags(["USER"]));
 
       toast.success("Logged in successfully");

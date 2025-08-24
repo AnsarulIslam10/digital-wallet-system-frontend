@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Link } from "react-router";
 
 interface FaqItem {
   id: string;
@@ -128,12 +129,12 @@ export const FAQ = ({
         <div className="mx-auto mt-12 max-w-3xl text-center">
           <h3 className="mb-2 text-2xl font-semibold">{supportHeading}</h3>
           <p className="mb-4 text-muted-foreground">{supportDescription}</p>
-          <a
-            href={supportButtonUrl}
+          <Link
+            to={supportButtonUrl}
             className="inline-block rounded-md bg-primary px-6 py-3 text-white hover:bg-primary/80"
           >
             {supportButtonText}
-          </a>
+          </Link>
         </div>
       </div>
     </section>

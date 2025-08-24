@@ -24,7 +24,7 @@ const registerSchema = z
   .object({
     name: z.string().min(3, { message: "Name is too short" }).max(50),
     phone: z.string().min(11, { message: "Phone number is too short" }),
-    email: z.string().email().optional(),
+    email: z.union([z.literal(""), z.email()]).optional(),
     password: z.string().min(6, { message: "Password is too short" }),
     confirmPassword: z
       .string()
@@ -53,7 +53,7 @@ export function RegisterForm({
       email: "",
       password: "",
       confirmPassword: "",
-      role: "user", // ✅ default goes here
+      role: "user",
     },
   });
 
