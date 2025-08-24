@@ -38,12 +38,14 @@ import {
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 const Overview = () => {
-  const { data: userData, isLoading: usersLoading } =
-    useGetAllUsersQuery(undefined);
+  const { data: userData, isLoading: usersLoading } = useGetAllUsersQuery({
+    page: 1,
+    limit: 1000,
+  });
   const { data: transactionData, isLoading: txLoading } =
     useGetAllTransactionsQuery({
       page: 1,
-      limit: 1000, // large enough to get all
+      limit: 1000,
     });
 
   if (usersLoading || txLoading) {
@@ -77,7 +79,7 @@ const Overview = () => {
 
   const users = userData?.data || [];
   const transactions = transactionData?.data?.data || [];
-
+  console.log(users);
   // User statistics
   const totalUsers = users.length;
   const totalAgents = users.filter((u: any) => u.role === "agent").length;
