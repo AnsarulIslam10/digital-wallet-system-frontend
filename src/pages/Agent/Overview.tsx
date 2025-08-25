@@ -37,13 +37,13 @@ export default function Overview() {
     amount: tx.amount,
   }));
 
-  // Calculate totals
   const totalCashIn = transactions
     .filter((tx: any) => tx.type === "add")
-    .reduce((sum, tx: any) => sum + tx.amount, 0);
+    .reduce((sum: number, tx: any) => sum + tx.amount, 0);
+
   const totalCashOut = transactions
     .filter((tx: any) => tx.type === "send" || tx.type === "withdraw")
-    .reduce((sum, tx: any) => sum + tx.amount, 0);
+    .reduce((sum: number, tx: any) => sum + tx.amount, 0);
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">

@@ -50,11 +50,16 @@ export const adminApi = baseApi.injectEndpoints({
     }),
 
     blockUser: build.mutation({
-      query: (userId: string) => ({ url: `/user/block/${userId}`, method: "PATCH" }),
+      query: (userId: string) => ({ 
+        url: `/user/block/${userId}`, 
+        method: "PATCH" 
+      }),
       invalidatesTags: ["USER"],
     }),
     unblockUser: build.mutation({
-      query: (userId: string) => ({ url: `/user/unblock/${userId}`, method: "PATCH" }),
+      query: (userId: string) => ({ 
+        url: `/user/unblock/${userId}`, 
+        method: "PATCH" }),
       invalidatesTags: ["USER"],
     }),
 
