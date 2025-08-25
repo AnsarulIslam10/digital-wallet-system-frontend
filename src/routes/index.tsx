@@ -18,6 +18,7 @@ import { withAuth } from "@/utils/withAuth";
 import Unauthorized from "@/pages/Unauthorized";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
+import Blocked from "@/pages/Blocked";
 
 export const router = createBrowserRouter([
   {
@@ -85,5 +86,9 @@ export const router = createBrowserRouter([
   {
     Component: Unauthorized,
     path: "/unauthorized",
+  },
+  {
+    Component: Blocked,
+    path: "/blocked",
   },
 ]);
