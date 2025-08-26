@@ -78,7 +78,7 @@ export default function CashOut() {
                     <FormLabel>User Phone</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <span className="absolute left-3 top-3 text-muted-foreground">
+                        <span className="absolute left-3 top-4 text-muted-foreground">
                           <Phone className="h-4 w-4" />
                         </span>
                         <Input
@@ -105,7 +105,7 @@ export default function CashOut() {
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <span className="absolute left-3 top-3 text-muted-foreground">
+                        <span className="absolute left-3 top-4 text-muted-foreground">
                           <DollarSign className="h-4 w-4" />
                         </span>
                         <Input
@@ -131,7 +131,7 @@ export default function CashOut() {
                     <FormLabel>User Password</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <span className="absolute left-3 top-3 text-muted-foreground">
+                        <span className="absolute left-3 top-4 text-muted-foreground">
                           <Lock className="h-4 w-4" />
                         </span>
                         <Input

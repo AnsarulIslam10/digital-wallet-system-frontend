@@ -77,7 +77,7 @@ export default function AddMoney() {
                       <FormLabel>Amount (BDT)</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <span className="absolute left-3 top-3 text-muted-foreground">
+                          <span className="absolute left-3 top-4 text-muted-foreground">
                             ৳
                           </span>
                           <Input
