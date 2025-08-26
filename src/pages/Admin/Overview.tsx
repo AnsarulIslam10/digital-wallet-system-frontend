@@ -79,7 +79,7 @@ const Overview = () => {
 
   const users = userData?.data || [];
   const transactions = transactionData?.data?.data || [];
-  console.log(users);
+
   // User statistics
   const totalUsers = users.length;
   const totalAgents = users.filter((u: any) => u.role === "agent").length;
@@ -97,7 +97,7 @@ const Overview = () => {
   );
   const averageTransaction =
     totalTransactions > 0 ? transactionVolume / totalTransactions : 0;
-  console.log(transactions);
+
   // Transaction type analysis
   const transactionTypes = transactions?.reduce((acc: any, tx: any) => {
     acc[tx.type] = (acc[tx.type] || 0) + 1;
