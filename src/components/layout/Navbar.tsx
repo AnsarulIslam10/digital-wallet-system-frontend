@@ -20,6 +20,7 @@ import { useAppDispatch } from "@/redux/hook";
 import { LogOut, UserCircle } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggler";
+import { toast } from "sonner";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -47,6 +48,7 @@ export default function Navbar() {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userRole");
       dispatch(authApi.util.resetApiState());
+      toast.success("Logout Successfully");
       navigate("/login", { replace: true });
     }
   };

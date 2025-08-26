@@ -19,11 +19,6 @@ export const adminSidebarItems: ISidebarItem[] = [
                 url: "/admin/profile",
                 component: Profile
             },
-        ],
-    },
-    {
-        title: "Digital Wallet Management",
-        items: [
             {
                 title: "Manage Users",
                 url: "/admin/manage-users",
@@ -39,6 +34,6 @@ export const adminSidebarItems: ISidebarItem[] = [
                 url: "/admin/transactions",
                 component: Transactions
             }
-        ]
-    }
+        ],
+    },
 ]

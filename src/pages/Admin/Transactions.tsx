@@ -153,14 +153,14 @@ export default function Transactions() {
           />
           <input
             type="number"
-            placeholder="Min Amount"
+            placeholder="Min"
             value={minAmount}
             onChange={(e) => setMinAmount(Number(e.target.value) || "")}
             className="border rounded px-2 py-1 w-24"
           />
           <input
             type="number"
-            placeholder="Max Amount"
+            placeholder="Max"
             value={maxAmount}
             onChange={(e) => setMaxAmount(Number(e.target.value) || "")}
             className="border rounded px-2 py-1 w-24"
