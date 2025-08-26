@@ -29,11 +29,11 @@ type LoginInputs = z.infer<typeof loginSchema>;
 function getRedirectPathByRole(role?: string) {
   switch (role) {
     case "agent":
-      return "/";
+      return "/agent/overview";
     case "admin":
-      return "/";
+      return "/admin/overview";
     default:
-      return "/";
+      return "/user/overview";
   }
 }
 
