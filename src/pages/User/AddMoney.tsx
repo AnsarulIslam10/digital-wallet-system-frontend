@@ -5,39 +5,46 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAddMoneyMutation } from "@/redux/features/transaction/transaction.api";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+// Accept string input, convert to number in refine
 const schema = z.object({
-  amount: z.number().min(10, "Minimum add is 10 BDT"),
+  amount: z
+    .string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 10, {
+      message: "Minimum add is 10 BDT",
+    }),
 });
 
 type AddMoneyInputs = z.infer<typeof schema>;
 
 export default function AddMoney() {
   const [addMoney, { isLoading }] = useAddMoneyMutation();
-  const form = useForm<AddMoneyInputs>({ resolver: zodResolver(schema) });
+  const form = useForm<AddMoneyInputs>({
+    resolver: zodResolver(schema),
+    defaultValues: { amount: "" },
+  });
 
   const onSubmit = async (values: AddMoneyInputs) => {
     try {
-      await addMoney(values).unwrap();
+      await addMoney({ amount: Number(values.amount) }).unwrap();
       toast.success("Money added successfully");
       form.reset();
     } catch (err: any) {
@@ -85,11 +92,9 @@ export default function AddMoney() {
                             placeholder="Enter amount"
                             className="pl-8 text-lg py-6"
                             {...field}
-                            onChange={(e) => field.onChange(+e.target.value)}
                           />
                         </div>
                       </FormControl>
-                      <FormDescription>Minimum amount: 10 BDT</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

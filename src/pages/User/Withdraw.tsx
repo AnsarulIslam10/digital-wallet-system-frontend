@@ -1,5 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useWithdrawMutation } from "@/redux/features/transaction/transaction.api";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -7,25 +22,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useWithdrawMutation } from "@/redux/features/transaction/transaction.api";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Shield } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const schema = z.object({
-  amount: z.number().min(50, "Minimum withdraw is 50 BDT"),
+  amount: z
+    .string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 50, {
+      message: "Minimum withdraw is 50 BDT",
+    }),
   password: z.string().min(6, "Password is required"),
 });
 
@@ -33,11 +37,17 @@ type WithdrawInputs = z.infer<typeof schema>;
 
 export default function Withdraw() {
   const [withdraw, { isLoading }] = useWithdrawMutation();
-  const form = useForm<WithdrawInputs>({ resolver: zodResolver(schema) });
+  const form = useForm<WithdrawInputs>({
+    resolver: zodResolver(schema),
+    defaultValues: { amount: "", password: "" },
+  });
 
   const onSubmit = async (values: WithdrawInputs) => {
     try {
-      await withdraw(values).unwrap();
+      await withdraw({
+        ...values,
+        amount: Number(values.amount),
+      }).unwrap();
       toast.success("Withdrawal successful");
       form.reset();
     } catch (err: any) {
@@ -46,11 +56,9 @@ export default function Withdraw() {
         Array.isArray(err.data.errors) &&
         err.data.errors.length > 0
       ) {
-        const firstErrorMessage = err.data.errors[0].message;
-
-        toast.error(firstErrorMessage);
-
         const firstError = err.data.errors[0];
+        toast.error(firstError.message);
+
         if (firstError.field && form.setError) {
           form.setError(firstError.field as keyof WithdrawInputs, {
             type: "manual",
@@ -73,7 +81,6 @@ export default function Withdraw() {
           </p>
         </div>
 
-        {/* Withdraw Form Card */}
         <Card>
           <CardHeader>
             <CardTitle>Enter Withdrawal Details</CardTitle>
@@ -83,10 +90,7 @@ export default function Withdraw() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="amount"
@@ -103,13 +107,11 @@ export default function Withdraw() {
                             placeholder="Enter amount"
                             className="pl-8 text-lg py-6"
                             {...field}
-                            onChange={(e) => field.onChange(+e.target.value)}
+                            onChange={(e) => field.onChange(e.target.value)} // keep string
                           />
                         </div>
                       </FormControl>
-                      <FormDescription>
-                        Minimum withdrawal: 50 BDT
-                      </FormDescription>
+                      <FormDescription>Minimum withdrawal: 50 BDT</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -142,11 +144,7 @@ export default function Withdraw() {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-6 text-lg"
-                >
+                <Button type="submit" disabled={isLoading} className="w-full py-6 text-lg">
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />

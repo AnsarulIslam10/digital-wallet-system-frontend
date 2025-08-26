@@ -26,7 +26,11 @@ import { Loader2, Phone, Shield, Send } from "lucide-react";
 
 const schema = z.object({
   receiverPhone: z.string().min(11, "Enter a valid phone number"),
-  amount: z.number().min(10, "Minimum send is 10 BDT"),
+  amount: z
+    .string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 10, {
+      message: "Minimum send is 10 BDT",
+    }),
   password: z.string().min(6, "Password is required"),
 });
 
@@ -34,11 +38,17 @@ type SendInputs = z.infer<typeof schema>;
 
 export default function SendMoney() {
   const [sendMoney, { isLoading }] = useSendMoneyMutation();
-  const form = useForm<SendInputs>({ resolver: zodResolver(schema) });
+  const form = useForm<SendInputs>({
+    resolver: zodResolver(schema),
+    defaultValues: { receiverPhone: "", amount: "", password: "" },
+  });
 
   const onSubmit = async (values: SendInputs) => {
     try {
-      await sendMoney(values).unwrap();
+      await sendMoney({
+        ...values,
+        amount: Number(values.amount),
+      }).unwrap();
       toast.success("Money sent successfully");
       form.reset();
     } catch (err: any) {
@@ -48,10 +58,9 @@ export default function SendMoney() {
         Array.isArray(err.data.errors) &&
         err.data.errors.length > 0
       ) {
-        const firstErrorMessage = err.data.errors[0].message;
-        toast.error(firstErrorMessage);
-
         const firstError = err.data.errors[0];
+        toast.error(firstError.message);
+
         if (firstError.field && form.setError) {
           form.setError(firstError.field as keyof SendInputs, {
             type: "manual",
@@ -74,7 +83,6 @@ export default function SendMoney() {
           </p>
         </div>
 
-        {/* Send Money Form Card */}
         <Card>
           <CardHeader>
             <CardTitle>Transfer Details</CardTitle>
@@ -84,10 +92,7 @@ export default function SendMoney() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="receiverPhone"
@@ -130,7 +135,7 @@ export default function SendMoney() {
                             placeholder="Enter amount"
                             className="pl-8 text-lg py-6"
                             {...field}
-                            onChange={(e) => field.onChange(+e.target.value)}
+                            onChange={(e) => field.onChange(e.target.value)} // keep string
                           />
                         </div>
                       </FormControl>
@@ -167,11 +172,7 @@ export default function SendMoney() {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-6 text-lg"
-                >
+                <Button type="submit" disabled={isLoading} className="w-full py-6 text-lg">
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
