@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
+import Password from "@/components/ui/Password";
 
 const loginSchema = z.object({
   phone: z.string().min(11, { message: "Phone number is too short" }),
@@ -105,7 +106,7 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} />
+                    <Password {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
