@@ -17,7 +17,7 @@ import {
   useUserInfoQuery,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hook";
-import { UserCircle } from "lucide-react";
+import { LogOut, UserCircle } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggler";
 
@@ -139,7 +139,7 @@ export default function Navbar() {
                 </Link>
               </div>
               <Button onClick={handleLogout} variant="outline">
-                Logout
+                Logout <LogOut />
               </Button>
             </div>
           ) : (
