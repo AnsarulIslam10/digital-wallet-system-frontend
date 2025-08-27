@@ -1,8 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { Fade, Slide, Zoom } from "react-awesome-reveal";
+import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 export const HeroSection = () => {
+  const { data } = useUserInfoQuery(undefined);
+  const getStartRoute = () => {
+    if (!data) return "/login";
+    switch (data.data.role) {
+      case "admin":
+        return "/admin";
+      case "agent":
+        return "/agent";
+      case "user":
+        return "/user";
+      default:
+        return "/login";
+    }
+  };
   return (
     <section className="relative overflow-hidden py-32">
       {/* Background */}
@@ -18,7 +33,6 @@ export const HeroSection = () => {
       <div className="relative z-10 container">
         <div className="mx-auto flex max-w-5xl flex-col items-center">
           <div className="flex flex-col items-center gap-6 text-center">
-
             <Zoom>
               <div className="rounded-xl bg-background/30 p-4 shadow-sm backdrop-blur-sm">
                 <svg
@@ -40,12 +54,12 @@ export const HeroSection = () => {
             <Fade direction="up" cascade damping={0.2}>
               <div>
                 <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl">
-                  Move money fast. Securely. Anywhere in Bangladesh with{" "} <br />
+                  Move money fast. Securely. Anywhere in Bangladesh with <br />
                   <span className="text-primary">SecurePay</span>
                 </h1>
                 <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
-                  Send, receive, cash-in/out, and track every taka with real-time
-                  insights.
+                  Send, receive, cash-in/out, and track every taka with
+                  real-time insights.
                 </p>
               </div>
             </Fade>
@@ -53,7 +67,7 @@ export const HeroSection = () => {
             {/* Buttons */}
             <Slide direction="up">
               <div className="mt-6 flex justify-center gap-3">
-                <Link to="/register">
+                <Link to={getStartRoute()}>
                   <Button size="lg">Get started</Button>
                 </Link>
                 <Link to="/features">

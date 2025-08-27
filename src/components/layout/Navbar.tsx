@@ -19,8 +19,8 @@ import {
 import { useAppDispatch } from "@/redux/hook";
 import { LogOut, UserCircle } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { ModeToggle } from "./ModeToggler";
 import { toast } from "sonner";
+import { ModeToggle } from "./ModeToggler";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
