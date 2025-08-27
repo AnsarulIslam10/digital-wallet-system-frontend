@@ -8,20 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { useGetMyTransactionsQuery } from "@/redux/features/transaction/transaction.api";
+import { useGetMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { ArrowUpRight, Plus, Send } from "lucide-react";
+import { useEffect } from "react";
+import { Fade } from "react-awesome-reveal";
 import { Link } from "react-router";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
 } from "recharts";
-import { Fade } from "react-awesome-reveal";
-import React, { useEffect } from "react";
 import Shepherd from "shepherd.js";
 import "shepherd.js/dist/css/shepherd.css";
 
