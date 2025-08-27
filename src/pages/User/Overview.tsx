@@ -149,7 +149,7 @@ export default function Overview() {
             tour.start();
           }}
         >
-          Start Tour
+          Restart Tour
         </Button>
       </div>
 
