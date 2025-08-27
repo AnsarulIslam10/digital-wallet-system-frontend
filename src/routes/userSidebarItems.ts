@@ -1,4 +1,4 @@
-import AddMoney from "@/pages/User/AddMoney";
+import DepositMoney from "@/pages/User/DepositMoney";
 import Overview from "@/pages/User/Overview";
 import Profile from "@/components/Profile";
 import SendMoney from "@/pages/User/SendMoney";
@@ -21,9 +21,9 @@ export const userSidebarItems: ISidebarItem[] = [
                 component: Profile
             },
             {
-                title: "Add Money",
-                url: "/user/add-money",
-                component: AddMoney
+                title: "Deposit Money",
+                url: "/user/deposit-money",
+                component: DepositMoney
             },
             {
                 title: "Send Money",

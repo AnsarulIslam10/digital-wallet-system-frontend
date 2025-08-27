@@ -33,18 +33,18 @@ const schema = z.object({
     }),
 });
 
-type AddMoneyInputs = z.infer<typeof schema>;
+type DepositeMoneyInputs = z.infer<typeof schema>;
 
-export default function AddMoney() {
-  const [addMoney, { isLoading }] = useAddMoneyMutation();
-  const form = useForm<AddMoneyInputs>({
+export default function DepositeMoney() {
+  const [DepositeMoney, { isLoading }] = useAddMoneyMutation();
+  const form = useForm<DepositeMoneyInputs>({
     resolver: zodResolver(schema),
     defaultValues: { amount: "" },
   });
 
-  const onSubmit = async (values: AddMoneyInputs) => {
+  const onSubmit = async (values: DepositeMoneyInputs) => {
     try {
-      await addMoney({ amount: Number(values.amount) }).unwrap();
+      await DepositeMoney({ amount: Number(values.amount) }).unwrap();
       toast.success("Money added successfully");
       form.reset();
     } catch (err: any) {
@@ -56,7 +56,7 @@ export default function AddMoney() {
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Add Money</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Deposit Money</h2>
           <p className="text-muted-foreground">
             Fund your wallet using one of our secure payment methods
           </p>
