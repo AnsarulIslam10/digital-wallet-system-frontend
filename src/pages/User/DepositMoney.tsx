@@ -48,7 +48,7 @@ export default function DepositeMoney() {
       toast.success("Money added successfully");
       form.reset();
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add money");
+      toast.error(err?.data?.message || "Failed to deposit money");
     }
   };
 
@@ -62,7 +62,7 @@ export default function DepositeMoney() {
           </p>
         </div>
 
-        {/* Add Money Form Card */}
+        {/* deposit Money Form Card */}
         <Card>
           <CardHeader>
             <CardTitle>Enter Amount</CardTitle>
@@ -111,7 +111,7 @@ export default function DepositeMoney() {
                       Processing...
                     </>
                   ) : (
-                    "Add Money"
+                    "Deposit Money"
                   )}
                 </Button>
               </form>

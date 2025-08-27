@@ -10,7 +10,7 @@ export default function Footer() {
   const sections = [
     {
       title: "Services",
-      links: ["Add Money", "Withdraw Money", "Send Money", "Transaction History"],
+      links: ["Deposit Money", "Withdraw Money", "Send Money", "Transaction History"],
     },
     {
       title: "Company",

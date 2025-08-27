@@ -84,7 +84,7 @@ export default function Overview() {
                     <Plus className="h-6 w-6 text-primary" />
                   </div>
                   <Button variant="ghost" className="font-medium">
-                    Add Money
+                    Deposit Money
                   </Button>
                 </Link>
               </CardContent>
