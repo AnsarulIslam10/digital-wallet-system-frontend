@@ -104,6 +104,7 @@ export const FAQ = ({
             <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
               {heading}
             </h2>
+            <div className="h-1 w-16 bg-primary mx-auto mb-6 rounded-full"></div>
             <p className="text-muted-foreground lg:text-lg">{description}</p>
           </div>
         </Slide>

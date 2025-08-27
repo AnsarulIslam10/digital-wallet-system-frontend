@@ -31,7 +31,9 @@ export const ContactPage = ({
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
@@ -39,7 +41,9 @@ export const ContactPage = ({
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => {
-      toast.success("Your message has been sent! Our support team will contact you soon.");
+      toast.success(
+        "Your message has been sent! Our support team will contact you soon."
+      );
       setSubmitted(false);
       setFormData({
         firstname: "",
@@ -55,14 +59,14 @@ export const ContactPage = ({
     <section className="py-32">
       <div className="container">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-10 lg:flex-row lg:gap-20">
-
           {/* Contact Info */}
           <Fade direction="up" cascade damping={0.2} triggerOnce>
             <div className="mx-auto flex max-w-sm flex-col justify-between gap-10">
               <div className="text-center lg:text-left">
-                <h1 className="mb-2 text-5xl font-semibold lg:mb-1 lg:text-6xl">
+                <h1 className="text-pretty text-3xl font-bold sm:text-4xl">
                   {title}
                 </h1>
+                <div className="h-1 w-20 bg-primary mb-6 rounded-full mt-3"></div>
                 <p className="text-muted-foreground">{description}</p>
               </div>
               <div className="mx-auto w-fit lg:mx-0">
@@ -71,15 +75,20 @@ export const ContactPage = ({
                 </h3>
                 <ul className="ml-4 list-disc">
                   <li>
-                    <span className="font-bold">Phone: </span>{phone}
+                    <span className="font-bold">Phone: </span>
+                    {phone}
                   </li>
                   <li>
                     <span className="font-bold">Email: </span>
-                    <a href={`mailto:${email}`} className="underline">{email}</a>
+                    <a href={`mailto:${email}`} className="underline">
+                      {email}
+                    </a>
                   </li>
                   <li>
                     <span className="font-bold">Web: </span>
-                    <a href={web.url} target="_blank" className="underline">{web.label}</a>
+                    <a href={web.url} target="_blank" className="underline">
+                      {web.label}
+                    </a>
                   </li>
                 </ul>
               </div>

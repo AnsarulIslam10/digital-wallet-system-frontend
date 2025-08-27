@@ -16,9 +16,10 @@ export const PricingPage = () => {
         <div className="flex flex-col gap-6">
           {/* Heading */}
           <Fade direction="up" cascade damping={0.2} triggerOnce>
-            <h2 className="text-pretty text-4xl font-bold lg:text-5xl">
+            <h2 className="text-pretty text-3xl font-bold sm:text-4xl">
               Wallet Plans
             </h2>
+            <div className="h-1 w-20 bg-primary mb-6 rounded-full"></div>
             <div className="flex flex-col justify-between gap-10 md:flex-row">
               <p className="text-muted-foreground max-w-3xl lg:text-xl">
                 Choose a plan that fits your needs. Whether you’re a casual user,
