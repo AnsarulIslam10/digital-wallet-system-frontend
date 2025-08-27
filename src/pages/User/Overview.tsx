@@ -190,7 +190,7 @@ export default function Overview() {
             <Card className="deposit-card">
               <CardContent className="p-6">
                 <Link
-                  to="/user/add-money"
+                  to="/user/deposit-money"
                   className="flex flex-col items-center gap-2"
                 >
                   <div className="p-3 bg-primary/10 rounded-full">
