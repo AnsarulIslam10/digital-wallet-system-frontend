@@ -21,6 +21,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Fade } from "react-awesome-reveal";
+import React, { useEffect } from "react";
+import Shepherd from "shepherd.js";
+import "shepherd.js/dist/css/shepherd.css";
 
 export default function Overview() {
   const { data: walletData, isLoading: walletLoading } =
@@ -32,14 +35,124 @@ export default function Overview() {
 
   const transactions = txData?.data?.data || [];
 
-  // Format data for chart
   const chartData = transactions.map((tx: any) => ({
     name: tx.type,
     amount: tx.amount,
   }));
 
+  // Function to create a tour
+  const createTour = () => {
+    const tour = new Shepherd.Tour({
+      defaultStepOptions: {
+        scrollTo: true,
+        cancelIcon: { enabled: true },
+        classes: "shepherd-modal",
+        highlightClass: "shepherd-highlight",
+      },
+    });
+
+    tour.addStep({
+      id: "wallet-balance",
+      text: "This card shows your total wallet balance. Keep track of your available funds easily.",
+      attachTo: { element: ".wallet-balance", on: "bottom" },
+      classes: "shepherd-centered-text",
+      buttons: [
+        { text: "Next", action: tour.next, classes: "shepherd-button-primary" },
+      ],
+    });
+
+    tour.addStep({
+      id: "deposit-money",
+      text: "Use this section to deposit money into your wallet quickly and securely.",
+      attachTo: { element: ".deposit-card", on: "top" },
+      classes: "shepherd-centered-text",
+      buttons: [
+        {
+          text: "Back",
+          action: tour.back,
+          classes: "shepherd-button-secondary",
+        },
+        { text: "Next", action: tour.next, classes: "shepherd-button-primary" },
+      ],
+    });
+
+    tour.addStep({
+      id: "withdraw-money",
+      text: "Here you can withdraw money from your wallet whenever you need it.",
+      attachTo: { element: ".withdraw-card", on: "top" },
+      classes: "shepherd-centered-text",
+      buttons: [
+        {
+          text: "Back",
+          action: tour.back,
+          classes: "shepherd-button-secondary",
+        },
+        { text: "Next", action: tour.next, classes: "shepherd-button-primary" },
+      ],
+    });
+
+    tour.addStep({
+      id: "send-money",
+      text: "Send money to friends or other users easily using this option.",
+      attachTo: { element: ".send-card", on: "top" },
+      classes: "shepherd-centered-text",
+      buttons: [
+        {
+          text: "Back",
+          action: tour.back,
+          classes: "shepherd-button-secondary",
+        },
+        { text: "Next", action: tour.next, classes: "shepherd-button-primary" },
+      ],
+    });
+
+    tour.addStep({
+      id: "recent-activity",
+      text: "This chart shows your recent transactions. Quickly see what was sent, received, or withdrawn.",
+      attachTo: { element: ".recent-activity", on: "top" },
+      classes: "shepherd-centered-text",
+      buttons: [
+        {
+          text: "Back",
+          action: tour.back,
+          classes: "shepherd-button-secondary",
+        },
+        {
+          text: "Finish",
+          action: tour.complete,
+          classes: "shepherd-button-primary",
+        },
+      ],
+    });
+
+    return tour;
+  };
+
+  // Auto-start the tour on first visit
+  useEffect(() => {
+    const firstVisit = localStorage.getItem("overviewTourSeen");
+    if (!firstVisit) {
+      const tour = createTour();
+      tour.start();
+      localStorage.setItem("overviewTourSeen", "true");
+    }
+  }, []);
+
   return (
     <div className="container mx-auto p-6 max-w-6xl">
+      {/* Restart Tour Button */}
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="outline"
+          onClick={() => {
+            const tour = createTour();
+            tour.start();
+          }}
+        >
+          Start Tour
+        </Button>
+      </div>
+
       <div className="flex flex-col gap-6">
         <Fade triggerOnce>
           <div>
@@ -52,7 +165,7 @@ export default function Overview() {
 
         {/* Wallet Balance */}
         <Fade triggerOnce>
-          <Card className="w-full max-w-md">
+          <Card className="w-full max-w-md wallet-balance">
             <CardHeader className="pb-3">
               <CardDescription>Available Balance</CardDescription>
               {walletLoading ? (
@@ -74,7 +187,7 @@ export default function Overview() {
         {/* Action Buttons */}
         <Fade cascade triggerOnce>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <Card>
+            <Card className="deposit-card">
               <CardContent className="p-6">
                 <Link
                   to="/user/add-money"
@@ -90,7 +203,7 @@ export default function Overview() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="withdraw-card">
               <CardContent className="p-6">
                 <Link
                   to="/user/withdraw"
@@ -106,7 +219,7 @@ export default function Overview() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="send-card">
               <CardContent className="p-6">
                 <Link
                   to="/user/send-money"
@@ -126,7 +239,7 @@ export default function Overview() {
 
         {/* Recent Activity */}
         <Fade triggerOnce>
-          <Card className="mt-6">
+          <Card className="mt-6 recent-activity">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
               <CardDescription>

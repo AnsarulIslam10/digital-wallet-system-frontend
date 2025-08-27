@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @custom-variant dark (&:is(.dark *));
+@import "shepherd.js/dist/css/shepherd.css";
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -119,4 +120,23 @@
     @apply bg-background text-foreground;
     font-family: "Roboto", sans-serif;
   }
+}
+.shepherd-highlight {
+  position: relative;
+  box-shadow: 0 0 0 4px #007BFF;
+  border-radius: 0.5rem; 
+}
+.shepherd-modal {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+  padding: 1rem;
+  font-family: "Inter", sans-serif;
+  color: #111827; /* dark gray */
+  max-width: 320px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.shepherd-centered-text {
+  text-align: center;
 }
