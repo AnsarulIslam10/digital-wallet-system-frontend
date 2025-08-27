@@ -40,7 +40,7 @@ export const HeroSection = () => {
             <Fade direction="up" cascade damping={0.2}>
               <div>
                 <h1 className="mb-6 text-2xl font-bold tracking-tight text-pretty lg:text-5xl">
-                  Move money fast. Securely. Anywhere in Bangladesh with{" "}
+                  Move money fast. Securely. Anywhere in Bangladesh with{" "} <br />
                   <span className="text-primary">SecurePay</span>
                 </h1>
                 <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">

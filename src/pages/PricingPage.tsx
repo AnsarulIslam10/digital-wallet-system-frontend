@@ -13,7 +13,7 @@ export const PricingPage = () => {
   return (
     <section className="py-10">
       <div className="container">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {/* Heading */}
           <Fade direction="up" cascade damping={0.2} triggerOnce>
             <h2 className="text-pretty text-4xl font-bold lg:text-5xl">
