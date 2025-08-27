@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Link } from "react-router";
+import { Fade, Slide } from "react-awesome-reveal";
 
 interface FaqItem {
   id: string;
@@ -95,47 +96,62 @@ export const FAQ = ({
   supportButtonUrl = "/contact",
 }: Faq3Props) => {
   return (
-    <section className="py-32">
+    <section className="py-10">
       <div className="container space-y-16">
-        <div className="mx-auto flex max-w-3xl flex-col text-left md:text-center">
-          <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
-            {heading}
-          </h2>
-          <p className="text-muted-foreground lg:text-lg">{description}</p>
-        </div>
+        {/* Heading & description */}
+        <Slide direction="up">
+          <div className="mx-auto flex max-w-3xl flex-col text-left md:text-center">
+            <h2 className="mb-3 text-3xl font-semibold md:mb-4 lg:mb-6 lg:text-4xl">
+              {heading}
+            </h2>
+            <p className="text-muted-foreground lg:text-lg">{description}</p>
+          </div>
+        </Slide>
 
+        {/* Accordion */}
         <Accordion
           type="single"
           collapsible
           className="mx-auto w-full lg:max-w-3xl"
         >
-          {items.map((item) => (
-            <AccordionItem key={item.id} value={item.id}>
-              <AccordionTrigger className="transition-opacity duration-200 hover:no-underline hover:opacity-60">
-                <div className="font-medium sm:py-1 lg:py-2 lg:text-lg">
-                  {item.question}
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="sm:mb-1 lg:mb-2">
-                <div className="text-muted-foreground lg:text-lg">
-                  {item.answer}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+          {items.map((item, index) => (
+            <Fade
+              key={item.id}
+              direction="up"
+              cascade
+              damping={0.1}
+            
+              delay={index * 50} // staggered effect
+            >
+              <AccordionItem value={item.id}>
+                <AccordionTrigger className="transition-opacity duration-200 hover:no-underline hover:opacity-60">
+                  <div className="font-medium sm:py-1 lg:py-2 lg:text-lg">
+                    {item.question}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="sm:mb-1 lg:mb-2">
+                  <div className="text-muted-foreground lg:text-lg">
+                    {item.answer}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Fade>
           ))}
         </Accordion>
 
         {/* Support section */}
-        <div className="mx-auto mt-12 max-w-3xl text-center">
-          <h3 className="mb-2 text-2xl font-semibold">{supportHeading}</h3>
-          <p className="mb-4 text-muted-foreground">{supportDescription}</p>
-          <Link
-            to={supportButtonUrl}
-            className="inline-block rounded-md bg-primary px-6 py-3 text-white hover:bg-primary/80"
-          >
-            {supportButtonText}
-          </Link>
-        </div>
+        <Slide direction="up">
+          <div className="mx-auto mt-12 max-w-3xl text-center">
+            <h3 className="mb-2 text-2xl font-semibold">{supportHeading}</h3>
+            <p className="mb-4 text-muted-foreground">{supportDescription}</p>
+            <Link
+              to={supportButtonUrl}
+              className="inline-block rounded-md bg-primary px-6 py-3 text-white hover:bg-primary/80"
+            >
+              {supportButtonText}
+            </Link>
+          </div>
+        </Slide>
       </div>
     </section>
   );

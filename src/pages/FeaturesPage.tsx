@@ -9,9 +9,9 @@ import {
   Compass,
   Smartphone,
 } from "lucide-react";
+import { Fade, Zoom } from "react-awesome-reveal";
 
 export default function FeaturesPage() {
-  // Define the features data with icons
   const features = [
     {
       id: 1,
@@ -80,35 +80,42 @@ export default function FeaturesPage() {
 
   return (
     <div>
+      {/* Section Header */}
       <section className="py-20 rounded-xl border-0 shadow-sm bg-gradient-to-br from-background to-muted/50">
         <div className="container text-center">
-          <div className="mx-auto flex max-w-5xl flex-col gap-6">
-            <h1 className="text-3xl font-extrabold lg:text-5xl">
-              Our Features
-            </h1>
-            <p className="text-muted-foreground text-balance lg:text-lg">
-              Explore the powerful features of our secure and user-friendly
-              Digital Wallet System.
-            </p>
-          </div>
+          <Fade direction="up" cascade damping={0.2} triggerOnce>
+            <div className="mx-auto flex max-w-5xl flex-col gap-6">
+              <h1 className="text-3xl font-extrabold lg:text-5xl">
+                Our Features
+              </h1>
+              <p className="text-muted-foreground text-balance lg:text-lg">
+                Explore the powerful features of our secure and user-friendly
+                Digital Wallet System.
+              </p>
+            </div>
+          </Fade>
         </div>
       </section>
+
+      {/* Features Grid */}
       <div className="container mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
-        {features.map((feature) => {
-          const Icon = feature.icon;
-          return (
-            <div
-              key={feature.id}
-              className="flex flex-col items-start gap-4 py-8 px-6 rounded-xl border shadow-sm bg-gradient-to-br from-background to-muted/50 hover:shadow-md transition"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Icon className="h-10 w-10" />
+        <Zoom cascade damping={0.1} triggerOnce>
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={feature.id}
+                className="flex flex-col items-start gap-4 py-8 px-6 rounded-xl border shadow-sm bg-gradient-to-br from-background to-muted/50 hover:shadow-md transition h-[100%]"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Icon className="h-10 w-10" />
+                </div>
+                <h3 className="text-xl font-semibold">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
               </div>
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </Zoom>
       </div>
     </div>
   );
