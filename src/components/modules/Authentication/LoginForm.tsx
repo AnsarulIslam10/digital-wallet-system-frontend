@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import Password from "@/components/ui/Password";
+import { Separator } from "@/components/ui/separator";
 
 const loginSchema = z.object({
   phone: z.string().min(11, { message: "Phone number is too short" }),
@@ -73,6 +74,25 @@ export function LoginForm({
     }
   };
 
+  const handleDemoLogin = (type: "admin" | "agent" | "user") => {
+    const demoCredentials = { phone: "", password: "123456" };
+
+    switch (type) {
+      case "admin":
+        demoCredentials.phone = "01711111111";
+        break;
+      case "agent":
+        demoCredentials.phone = "01799999999";
+        break;
+      case "user":
+        demoCredentials.phone = "01722222222";
+        break;
+    }
+
+    form.setValue("phone", demoCredentials.phone);
+    form.setValue("password", demoCredentials.password);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -80,6 +100,19 @@ export function LoginForm({
         <p className="text-balance text-sm text-muted-foreground">
           Enter your phone number and password to login
         </p>
+      </div>
+      <Separator />
+      <p className="text-center text-2xl">Demo Credentials</p>
+      <div className="flex justify-center gap-2">
+        <Button size="sm" onClick={() => handleDemoLogin("admin")}>
+          Admin Demo
+        </Button>
+        <Button size="sm" onClick={() => handleDemoLogin("agent")}>
+          Agent Demo
+        </Button>
+        <Button size="sm" onClick={() => handleDemoLogin("user")}>
+          User Demo
+        </Button>
       </div>
 
       <div className="grid gap-6">
