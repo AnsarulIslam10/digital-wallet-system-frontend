@@ -5,12 +5,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 
 export default function Footer() {
   const sections = [
     {
       title: "Services",
-      links: ["Deposit Money", "Withdraw Money", "Send Money", "Transaction History"],
+      links: [
+        "Deposit Money",
+        "Withdraw Money",
+        "Send Money",
+        "Transaction History",
+      ],
     },
     {
       title: "Company",
@@ -42,11 +48,38 @@ export default function Footer() {
             </p>
 
             <ul className="mt-8 flex gap-6">
-              {/* Social links placeholders */}
-              <li><a href="#" className="text-muted-foreground/80 hover:opacity-75">FB</a></li>
-              <li><a href="#" className="text-muted-foreground/80 hover:opacity-75">IG</a></li>
-              <li><a href="#" className="text-muted-foreground/80 hover:opacity-75">TW</a></li>
-              <li><a href="#" className="text-muted-foreground/80 hover:opacity-75">GH</a></li>
+              <li>
+                <a
+                  href="#"
+                  className="text-muted-foreground/80 hover:opacity-75"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-muted-foreground/80 hover:opacity-75"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-muted-foreground/80 hover:opacity-75"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-muted-foreground/80 hover:opacity-75"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -55,11 +88,16 @@ export default function Footer() {
             <div className="hidden lg:grid grid-cols-4 gap-8">
               {sections.map((section) => (
                 <div key={section.title}>
-                  <p className="font-medium text-muted-foreground">{section.title}</p>
+                  <p className="font-medium text-muted-foreground">
+                    {section.title}
+                  </p>
                   <ul className="mt-6 space-y-4 text-sm">
                     {section.links.map((link) => (
                       <li key={link}>
-                        <a href="#" className="text-muted-foreground/80 hover:opacity-75">
+                        <a
+                          href="#"
+                          className="text-muted-foreground/80 hover:opacity-75"
+                        >
                           {link}
                         </a>
                       </li>
@@ -79,7 +117,10 @@ export default function Footer() {
                       <ul className="space-y-2 text-sm">
                         {section.links.map((link) => (
                           <li key={link}>
-                            <a href="#" className="text-muted-foreground/80 hover:opacity-75">
+                            <a
+                              href="#"
+                              className="text-muted-foreground/80 hover:opacity-75"
+                            >
                               {link}
                             </a>
                           </li>
